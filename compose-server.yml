@@ -2,7 +2,7 @@ version: "3"
 
 services:
   chirpstack-gateway-bridge:
-    name: chirpstack-gateway-bridge
+    container_name: chirpstack-gateway-bridge
     image: chirpstack/chirpstack-gateway-bridge:4
     restart: unless-stopped
     ports:
@@ -18,7 +18,7 @@ services:
       - mosquitto
   
   chirpstack-gateway-bridge-basicstation:
-    name: chirpstack-gateway-bridge-basicstatio
+    container_name: chirpstack-gateway-bridge-basicstatio
     image: chirpstack/chirpstack-gateway-bridge:4
     restart: unless-stopped
     command: -c /etc/chirpstack-gateway-bridge/chirpstack-gateway-bridge-basicstation-eu868.toml
@@ -31,7 +31,7 @@ services:
 
   
   mosquitto:
-    name: mosquitto
+    container_name: mosquitto
     image: eclipse-mosquitto:2
     restart: unless-stopped
     ports:
@@ -40,7 +40,6 @@ services:
       - ./configuration/mosquitto/config/:/mosquitto/config/
   
   p4sniffer:
-    name: p4sniffer
     image: dnredson/p4sniffer
     container_name: p4sniffer
     network_mode: "host"
