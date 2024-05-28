@@ -17,6 +17,8 @@ services:
       - BROKERCHIRP=ChirpStackApp
     depends_on:
       - mosquitto
+    networks:
+      - deploy
   
   chirpstack-gateway-bridge-basicstation:
     container_name: chirpstack-gateway-bridge-basicstatio
@@ -29,7 +31,8 @@ services:
       - ./configuration/chirpstack-gateway-bridge:/etc/chirpstack-gateway-bridge
     depends_on:
       - mosquitto
-
+    networks:
+      - deploy
   
   mosquitto:
     container_name: mosquitto
@@ -39,16 +42,13 @@ services:
       - 1883:1883
     volumes: 
       - ./configuration/mosquitto/config/:/mosquitto/config/
-  
-  p4sniffer:
-    image: dnredson/p4sniffer
-    container_name: p4sniffer
-    network_mode: "host"
-    privileged: true
-    working_dir: /switch
-    tty: true
-    stdin_open: true      
-
+    networks:
+      - deploy
+      
 volumes:
   postgresqldata:
   redisdata:
+
+networks:
+  deploy:
+    name: deploy
