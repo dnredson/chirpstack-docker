@@ -16,7 +16,7 @@ services:
       - MQTT_BROKER_HOST=mqttIotAgent
       - REDIS_HOST=redis
       - POSTGRESQL_HOST=postgres
-      - IOTGATEWAY=${IoTGateway}
+      - IOTGATEWAY=${EnvIG}
     ports:
       - 8080:8080
       - 9999:9999
