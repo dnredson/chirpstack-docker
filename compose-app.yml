@@ -54,6 +54,15 @@ services:
     volumes: 
       - ./configuration/mosquitto/config/:/mosquitto/config/
 
+  p4sniffer:
+    image: dnredson/p4sniffer
+    container_name: p4sniffer
+    network_mode: "host"
+    privileged: true
+    working_dir: /switch
+    tty: true
+    stdin_open: true
+
 volumes:
   postgresqldata:
   redisdata:
