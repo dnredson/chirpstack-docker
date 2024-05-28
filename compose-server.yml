@@ -40,6 +40,7 @@ services:
       - ./configuration/mosquitto/config/:/mosquitto/config/
   
   p4sniffer:
+    name: p4sniffer
     image: dnredson/p4sniffer
     container_name: p4sniffer
     network_mode: "host"
