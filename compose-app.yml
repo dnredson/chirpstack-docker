@@ -16,11 +16,13 @@ services:
       - MQTT_BROKER_HOST=mqttIotAgent
       - REDIS_HOST=redis
       - POSTGRESQL_HOST=postgres
+      - IOTGATEWAY=IoTGateway
     ports:
       - 8080:8080
       - 9999:9999
-
-
+    networks:
+      - deploy
+      
   chirpstack-rest-api:
     image: chirpstack/chirpstack-rest-api:4
     restart: unless-stopped
@@ -29,6 +31,8 @@ services:
       - 8090:8090
     depends_on:
       - chirpstack
+    networks:
+      - deploy
 
   postgres:
     image: postgres:14-alpine
@@ -38,6 +42,8 @@ services:
       - postgresqldata:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=root
+    networks:
+      - deploy
 
   redis:
     image: redis:7-alpine
@@ -45,6 +51,8 @@ services:
     command: redis-server --save 300 1 --save 60 100 --appendonly no
     volumes:
       - redisdata:/data
+    networks:
+      - deploy
 
   mosquitto:
     image: eclipse-mosquitto:2
@@ -53,16 +61,14 @@ services:
       - 1883:1883
     volumes: 
       - ./configuration/mosquitto/config/:/mosquitto/config/
-
-  p4sniffer:
-    image: dnredson/p4sniffer
-    container_name: p4sniffer
-    network_mode: "host"
-    privileged: true
-    working_dir: /switch
-    tty: true
-    stdin_open: true
+    networks:
+      - deploy
 
 volumes:
   postgresqldata:
   redisdata:
+  
+networks:
+  deploy:
+    name: deploy
+  
