@@ -25,7 +25,7 @@ services:
       - deploy
       
   chirpstack-rest-api:
-    container_name:: chirpstack-rest-api
+    container_name: chirpstack-rest-api
     image: chirpstack/chirpstack-rest-api:4
     restart: unless-stopped
     command: --server chirpstack:8080 --bind 0.0.0.0:8090 --insecure
