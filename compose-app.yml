@@ -2,6 +2,7 @@ version: "3"
 
 services:
   chirpstack:
+    container_name: chirpstack
     image: chirpstack/chirpstack:4
     command: -c /etc/chirpstack
     restart: unless-stopped
@@ -24,6 +25,7 @@ services:
       - deploy
       
   chirpstack-rest-api:
+    container_name:: chirpstack-rest-api
     image: chirpstack/chirpstack-rest-api:4
     restart: unless-stopped
     command: --server chirpstack:8080 --bind 0.0.0.0:8090 --insecure
@@ -35,6 +37,7 @@ services:
       - deploy
 
   postgres:
+    container_name: postgres
     image: postgres:14-alpine
     restart: unless-stopped
     volumes:
@@ -46,6 +49,7 @@ services:
       - deploy
 
   redis:
+    container_name: redis
     image: redis:7-alpine
     restart: unless-stopped
     command: redis-server --save 300 1 --save 60 100 --appendonly no
@@ -55,6 +59,7 @@ services:
       - deploy
 
   mosquitto:
+    container_name: mosquitto
     image: eclipse-mosquitto:2
     restart: unless-stopped
     ports:
