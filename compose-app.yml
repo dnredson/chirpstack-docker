@@ -2,7 +2,7 @@ version: "3"
 
 services:
   ChirpStackApp:
-    container_name: chirpstack
+    container_name: ChirpStackApp
     image: chirpstack/chirpstack:4
     command: -c /etc/chirpstack
     restart: unless-stopped
