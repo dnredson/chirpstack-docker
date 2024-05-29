@@ -104,5 +104,5 @@
   enabled=["mqtt"]
 
   [integration.mqtt]
-    server="tcp://$IOTGATEWAY:1883/"
+    server="tcp://$IOTGATEWAY:1883"
     json=true
