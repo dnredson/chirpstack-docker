@@ -1,8 +1,9 @@
 version: "3"
 
 services:
+ 
+
   chirpstack-gateway-bridge:
-    container_name: chirpstack-gateway-bridge
     image: chirpstack/chirpstack-gateway-bridge:4
     restart: unless-stopped
     ports:
@@ -10,18 +11,13 @@ services:
     volumes:
       - ./configuration/chirpstack-gateway-bridge:/etc/chirpstack-gateway-bridge
     environment:
-      - MQTT_BROKER_HOST=mosquitto
       - INTEGRATION__MQTT__EVENT_TOPIC_TEMPLATE=eu868/gateway/{{ .GatewayID }}/event/{{ .EventType }}
       - INTEGRATION__MQTT__STATE_TOPIC_TEMPLATE=eu868/gateway/{{ .GatewayID }}/state/{{ .StateType }}
       - INTEGRATION__MQTT__COMMAND_TOPIC_TEMPLATE=eu868/gateway/{{ .GatewayID }}/command/#
-      - BROKERCHIRP=${EnvCS}
     depends_on:
       - mosquitto
-    networks:
-      - deploy
   
-  chirpstack-gw-basicstation:
-    container_name: chirpstack-gw-basicstation
+  chirpstack-gateway-bridge-basicstation:
     image: chirpstack/chirpstack-gateway-bridge:4
     restart: unless-stopped
     command: -c /etc/chirpstack-gateway-bridge/chirpstack-gateway-bridge-basicstation-eu868.toml
@@ -31,24 +27,17 @@ services:
       - ./configuration/chirpstack-gateway-bridge:/etc/chirpstack-gateway-bridge
     depends_on:
       - mosquitto
-    networks:
-      - deploy
+
   
   mosquitto:
-    container_name: mosquitto
     image: eclipse-mosquitto:2
     restart: unless-stopped
     ports:
       - 1883:1883
-    volumes: 
-      - ./configuration/mosquitto/config/:/mosquitto/config/
-    networks:
-      - deploy
-      
-volumes:
-  postgresqldata:
-  redisdata:
+    volumes:
+      - ./configuration/mosquitto/config:/mosquitto/config
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_log:/mosquitto/log
+    environment:
+      - CENTRAL_BROKER_IP=${EnvCS}
 
-networks:
-  deploy:
-    name: deploy
