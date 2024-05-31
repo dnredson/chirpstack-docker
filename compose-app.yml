@@ -3,6 +3,7 @@ version: "3"
 services:
   chirpstack:
     image: chirpstack/chirpstack:4
+    container_name: chirpstack
     command: -c /etc/chirpstack
     restart: unless-stopped
     volumes:
@@ -19,18 +20,24 @@ services:
       - INTEGRATION=${EnvIG}
     ports:
       - 8080:8080
+    networks:
+      - deploy
 
-  chirpstack-rest-api:
+  chirpstackApi:
     image: chirpstack/chirpstack-rest-api:4
+    container_name: chirpstackApi
     restart: unless-stopped
     command: --server chirpstack:8080 --bind 0.0.0.0:8090 --insecure
     ports:
       - 8090:8090
     depends_on:
       - chirpstack
+    networks:
+      - deploy
 
   postgres:
     image: postgres:14-alpine
+     container_name: postgres
     restart: unless-stopped
     volumes:
       - ./configuration/postgresql/initdb:/docker-entrypoint-initdb.d
@@ -39,22 +46,35 @@ services:
       - 5432:5432
     environment:
       - POSTGRES_PASSWORD=root
+    networks:
+      - deploy
 
   redis:
     image: redis:7-alpine
+    container_name: redis
     restart: unless-stopped
     command: redis-server --save 300 1 --save 60 100 --appendonly no
     volumes:
       - redisdata:/data
+    networks:
+      - deploy
 
   mosquitto:
+    container_name: mqtt
     image: eclipse-mosquitto:2
     restart: unless-stopped
     ports:
       - 1883:1883
     volumes: 
       - ./configuration/mosquitto/config/:/mosquitto/config/
+    networks:
+      - deploy
 
 volumes:
   postgresqldata:
   redisdata:
+
+networks:
+  deploy:
+    external: true
+    name: deploy
