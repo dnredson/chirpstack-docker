@@ -11,7 +11,7 @@ services:
       - ./lorawan-devices:/opt/lorawan-devices
     depends_on:
       - postgres
-      - mosquitto
+      - mqtt
       - redis
     environment:
       - MQTT_BROKER_HOST=mosquitto
@@ -59,7 +59,7 @@ services:
     networks:
       - deploy
 
-  mosquitto:
+  mqtt:
     container_name: mqtt
     image: eclipse-mosquitto:2
     restart: unless-stopped
